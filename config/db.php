@@ -51,10 +51,29 @@ function get_db(): PDO
     try {
         $pdo = new PDO($dsn, DB_USER, DB_PASS, $opts);
     } catch (PDOException $e) {
-        // Never expose credentials or raw SQL errors to the browser.
         error_log('DB connection failed: ' . $e->getMessage());
         http_response_code(503);
-        exit('Database unavailable. Please try again later.');
+
+        $showDebug = (getenv('DEBUG') === 'true') || isset($_GET['debug']);
+        if ($showDebug) {
+            echo "<div style='font-family:sans-serif;padding:30px;max-width:700px;margin:40px auto;border:1px solid #f87171;background:#fef2f2;border-radius:12px;color:#991b1b;'>";
+            echo "<h2 style='margin-top:0;'>⚠️ Database Connection Error</h2>";
+            echo "<p><strong>Error Message:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
+            echo "<hr style='border:none;border-top:1px solid #fca5a5;'>";
+            echo "<p><strong>Attempted Connection Settings:</strong></p>";
+            echo "<ul>";
+            echo "<li><strong>DB_HOST:</strong> " . htmlspecialchars(DB_HOST) . "</li>";
+            echo "<li><strong>DB_PORT:</strong> " . htmlspecialchars(DB_PORT) . "</li>";
+            echo "<li><strong>DB_NAME:</strong> " . htmlspecialchars(DB_NAME) . "</li>";
+            echo "<li><strong>DB_USER:</strong> " . htmlspecialchars(DB_USER) . "</li>";
+            echo "<li><strong>DB_PASS:</strong> " . (DB_PASS !== '' ? '•••••••• (set)' : '<span style="color:red;">(empty)</span>') . "</li>";
+            echo "</ul>";
+            echo "<p style='color:#7f1d1d;font-size:13px;'>Make sure these 5 variables match your database credentials in the Render Dashboard → Environment tab.</p>";
+            echo "</div>";
+            exit;
+        }
+
+        exit('Database unavailable. Please try again later. (Append <code>?debug=1</code> to your URL to see details)');
     }
 
     return $pdo;
