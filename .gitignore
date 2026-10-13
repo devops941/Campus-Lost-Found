@@ -1,0 +1,7 @@
+vendor/
+logs/*.log
+uploads/*.jpg
+uploads/*.jpeg
+uploads/*.png
+uploads/*.webp
+config/mail.php

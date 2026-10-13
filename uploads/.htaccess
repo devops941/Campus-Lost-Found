@@ -1,0 +1,15 @@
+# Block all direct HTTP access to this directory.
+# Even if a PHP file is uploaded it cannot be executed.
+
+# Disable PHP engine (Apache mod_php)
+php_flag engine off
+
+# Deny all: only allow images served via PHP
+Order Allow,Deny
+Deny from all
+
+# Allow actual image files to be served directly (Apache 2.4 syntax)
+<FilesMatch "\.(jpe?g|png|webp|gif)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>

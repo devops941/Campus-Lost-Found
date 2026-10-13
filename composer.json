@@ -1,0 +1,15 @@
+{
+    "name": "campus/lost-found-portal",
+    "description": "Campus Lost and Found Portal with Smart Matching — KZ-WEB-03",
+    "type": "project",
+    "require": {
+        "php": ">=8.0",
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "autoload": {
+        "psr-4": {}
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}
